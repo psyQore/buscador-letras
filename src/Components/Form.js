@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Form = () => {
+const Form = ({ setSearchLetter }) => {
   const [search, setSearch] = useState({
     artist: "",
     song: "",
@@ -19,25 +19,34 @@ const Form = () => {
 
   // Consultar las apis
 
-  const searchInformation = e => {
+  const searchInformation = (e) => {
     e.preventDefault();
 
     // Validamos si esta vacion
-    if(artist.trim() === '' || song.trim() === ''){
-      setError(true)
+    if (artist.trim() === "" || song.trim() === "") {
+      setError(true);
       return;
     }
 
-    setError(false)
-
+    setError(false);
     // pasar al componente principal
-  }
+    setSearchLetter(search);
+  };
 
   return (
     <div className="bg-info">
+      {error ? (
+        <p className="alert alert-danger text-center p-2">
+          Todos los campos son obligatorios.
+        </p>
+      ) : null}
+
       <div className="container">
         <div className="row">
-          <form onSubmit={searchInformation} className="col card text-white bg-transparent mb-5 pt-5 pb-2">
+          <form
+            onSubmit={searchInformation}
+            className="col card text-white bg-transparent mb-5 pt-5 pb-2"
+          >
             <fieldset>
               <legend className="text-center">Buscador - Song lyrics</legend>
               <div className="row">
