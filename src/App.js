@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useEffect } from "react";
 import Form from "./Components/Form";
-import Song from './Components/Song'
+import Song from "./Components/Song";
 import axios from "axios";
 
 function App() {
   const [searchLetter, setSearchLetter] = useState({});
-  const [lyrics, setLyrics] = useState("");
+  const [lyrics, setLyrics ] = useState("");
+  const [info, setInfo] = useState({});
 
   useEffect(() => {
     // Si el objeto esta vacio
@@ -14,10 +15,17 @@ function App() {
     const consultApiLyrics = async () => {
       const { artist, song } = searchLetter;
       const url = `https://api.lyrics.ovh/v1/${artist}/${song}`;
+      const url2 = `https://www.theaudiodb.com/api/v1/json/1/search.php?s=${artist}`;
 
-      const result = await axios(url);
+      const [lyrics, info] = await Promise.all([
+        axios(url),
+        axios(url2),
+      ]);
 
-      setLyrics(result.data.lyrics);
+      setLyrics(lyrics.data.lyrics);
+      console.log(info.data.artists[0].strArtist);
+
+     // setLyrics(result.data.lyrics);
     };
 
     consultApiLyrics();
@@ -31,7 +39,7 @@ function App() {
         <div className="row">
           <div className="col-md-6"></div>
           <div className="col-md-6">
-            <Song lyrics={lyrics}/>
+            <Song lyrics={lyrics} />
           </div>
         </div>
       </div>
